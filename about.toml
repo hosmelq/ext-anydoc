@@ -1,0 +1,21 @@
+accepted = [
+    "MIT",
+    "Apache-2.0",
+    "BSD-3-Clause",
+    "Unicode-3.0",
+    "Zlib",
+    "0BSD",
+    "BSL-1.0",
+    "bzip2-1.0.6",
+    "CC0-1.0",
+    "CDLA-Permissive-2.0",
+    "ISC",
+    "LGPL-2.1-or-later",
+    "MIT-0",
+    "Unlicense",
+    "Apache-2.0 WITH LLVM-exception",
+]
+
+ignore-build-dependencies = true
+ignore-dev-dependencies = true
+targets = ["x86_64-pc-windows-msvc"]

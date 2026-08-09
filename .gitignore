@@ -1,0 +1,8 @@
+.DS_Store
+.agents
+.idea
+.vscode
+composer.lock
+/dist
+/target
+vendor

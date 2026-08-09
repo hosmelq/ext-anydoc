@@ -1,0 +1,201 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  cancel-in-progress: false
+  group: release-${{ github.run_id }}
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify release
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c
+        with:
+          toolchain: 1.88.0
+
+      - name: Verify release tag
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          package_version="$(cargo metadata --locked --format-version 1 --no-deps | jq --raw-output '.packages[] | select(.name == "ext-anydoc") | .version')"
+
+          if [[ "${RELEASE_TAG}" != "v${package_version}" ]]; then
+            echo "Release tag ${RELEASE_TAG} does not match Cargo version ${package_version}."
+            exit 1
+          fi
+
+  continuous-integration:
+    name: Continuous integration
+
+    needs: verify
+    uses: ./.github/workflows/ci.yml
+
+  release:
+    name: GitHub release
+
+    needs: continuous-integration
+    permissions:
+      contents: write # Creates the GitHub release and uploads its assets.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Download Windows packages
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          merge-multiple: true
+          path: dist
+          pattern: php-anydoc-*
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c
+        with:
+          toolchain: 1.88.0
+
+      - name: Install cargo-about
+        run: >-
+          cargo install
+          --features cli
+          --locked
+          --version 0.9.1
+          cargo-about
+
+      - name: Bundle licenses
+        env:
+          THIRD_PARTY_LICENSES: ${{ runner.temp }}/THIRD_PARTY_LICENSES.txt
+        run: |
+          cargo about generate \
+            --fail \
+            --locked \
+            --output-file "${THIRD_PARTY_LICENSES}" \
+            about.hbs
+
+          for archive in dist/*.zip; do
+            zip -j "${archive}" "${THIRD_PARTY_LICENSES}"
+
+            dll="$(basename "${archive%.zip}.dll")"
+            entries="$(unzip -Z1 "${archive}")"
+
+            if [[ "$(wc -l <<< "${entries}" | tr -d ' ')" -ne 3 ]]; then
+              echo "Windows package ${archive} does not contain exactly three files."
+              exit 1
+            fi
+
+            for required in "${dll}" LICENSE.md THIRD_PARTY_LICENSES.txt; do
+              if ! grep --fixed-strings --line-regexp --quiet "${required}" <<< "${entries}"; then
+                echo "Windows package ${archive} is missing ${required}."
+                exit 1
+              fi
+            done
+          done
+
+      - name: Generate checksums
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        working-directory: dist
+        run: |
+          archives=(
+            "php_anydoc-${RELEASE_TAG}-8.4-nts-vs17-x86_64.zip"
+            "php_anydoc-${RELEASE_TAG}-8.4-ts-vs17-x86_64.zip"
+            "php_anydoc-${RELEASE_TAG}-8.5-nts-vs17-x86_64.zip"
+            "php_anydoc-${RELEASE_TAG}-8.5-ts-vs17-x86_64.zip"
+          )
+
+          for archive in "${archives[@]}"; do
+            if [[ ! -f "${archive}" ]]; then
+              echo "Expected Windows package ${archive} was not built."
+              exit 1
+            fi
+
+            sha256sum "${archive}" > "${archive}.sha256"
+          done
+
+          sha256sum --check -- *.sha256
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2 # zizmor: ignore[superfluous-actions]
+        with:
+          files: dist/*
+          generate_release_notes: true
+
+      - name: Verify release assets
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -uo pipefail
+
+          expected=(
+            "php_anydoc-${RELEASE_TAG}-8.4-nts-vs17-x86_64.zip"
+            "php_anydoc-${RELEASE_TAG}-8.4-nts-vs17-x86_64.zip.sha256"
+            "php_anydoc-${RELEASE_TAG}-8.4-ts-vs17-x86_64.zip"
+            "php_anydoc-${RELEASE_TAG}-8.4-ts-vs17-x86_64.zip.sha256"
+            "php_anydoc-${RELEASE_TAG}-8.5-nts-vs17-x86_64.zip"
+            "php_anydoc-${RELEASE_TAG}-8.5-nts-vs17-x86_64.zip.sha256"
+            "php_anydoc-${RELEASE_TAG}-8.5-ts-vs17-x86_64.zip"
+            "php_anydoc-${RELEASE_TAG}-8.5-ts-vs17-x86_64.zip.sha256"
+          )
+
+          missing_assets() {
+            local present
+            present="$(gh release view "${RELEASE_TAG}" --json assets --jq '.assets[].name' 2>/dev/null || true)"
+            local missing=()
+
+            for asset in "${expected[@]}"; do
+              if ! grep --fixed-strings --line-regexp --quiet "${asset}" <<< "${present}"; then
+                missing+=("${asset}")
+              fi
+            done
+
+            printf '%s\n' "${missing[@]}"
+          }
+
+          for pass in 1 2 3; do
+            mapfile -t missing < <(missing_assets)
+
+            if [[ "${#missing[@]}" -eq 1 && -z "${missing[0]}" ]]; then
+              missing=()
+            fi
+
+            if [[ "${#missing[@]}" -eq 0 ]]; then
+              exit 0
+            fi
+
+            for asset in "${missing[@]}"; do
+              gh release upload "${RELEASE_TAG}" "dist/${asset}" --clobber || true
+            done
+
+            sleep 10
+          done
+
+          mapfile -t missing < <(missing_assets)
+
+          if [[ "${#missing[@]}" -eq 1 && -z "${missing[0]}" ]]; then
+            missing=()
+          fi
+
+          if [[ "${#missing[@]}" -ne 0 ]]; then
+            echo "Release ${RELEASE_TAG} is missing: ${missing[*]}."
+            exit 1
+          fi

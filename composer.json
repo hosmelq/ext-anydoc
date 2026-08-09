@@ -1,0 +1,28 @@
+{
+    "name": "hosmelq/ext-anydoc",
+    "description": "Community-maintained PHP bindings for Firecrawl Anydoc.",
+    "license": "MIT",
+    "type": "php-ext",
+    "keywords": [
+        "anydoc",
+        "document-conversion",
+        "hosmelq",
+        "php-extension"
+    ],
+    "authors": [
+        {
+            "name": "Hosmel Quintana",
+            "email": "hosmelq@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.4"
+    },
+    "php-ext": {
+        "extension-name": "anydoc",
+        "support-zts": true,
+        "support-nts": true,
+        "build-path": "pie"
+    },
+    "$schema": "https://getcomposer.org/schema.json"
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "dependencyDashboard": true,
+  "enabledManagers": ["cargo", "github-actions"],
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "includePaths": [
+    ".github/workflows/**",
+    "Cargo.lock",
+    "Cargo.toml"
+  ],
+  "packageRules": [
+    {
+      "matchDepNames": ["pullfrog/pullfrog"],
+      "matchManagers": ["github-actions"],
+      "pinDigests": false
+    },
+    {
+      "groupName": "cargo dependencies",
+      "matchManagers": ["cargo"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "groupName": "github actions",
+      "matchManagers": ["github-actions"],
+      "schedule": ["* 3-6 * * 1,4"]
+    }
+  ],
+  "rebaseWhen": "conflicted",
+  "schedule": ["* 3-6 * * 3"],
+  "semanticCommits": "enabled",
+  "separateMajorMinor": false,
+  "timezone": "America/Managua"
+}

@@ -1,0 +1,39 @@
+name: Pullfrog
+
+run-name: ${{ inputs.name || github.workflow }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: Run name
+        type: string
+      prompt:
+        description: Agent prompt
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  pullfrog:
+    name: Pullfrog
+
+    permissions:
+      contents: read
+      id-token: write # Authenticates Pullfrog through OIDC.
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Run agent
+        uses: pullfrog/pullfrog@v0
+        with:
+          prompt: ${{ inputs.prompt }}
+          push: restricted

@@ -1,0 +1,25 @@
+[package]
+description = "Community-maintained PHP bindings for Firecrawl Anydoc"
+edition = "2024"
+license = "MIT"
+name = "ext-anydoc"
+publish = false
+repository = "https://github.com/hosmelq/ext-anydoc"
+rust-version = "1.88"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"]
+name = "anydoc"
+
+[dependencies]
+anydoc = "=0.1.7"
+ext-php-rs = "=0.15.15"
+
+[build-dependencies]
+anyhow = "=1.0.104"
+ext-php-rs-build = "=0.1.1"
+
+[profile.release]
+lto = "thin"
+strip = "symbols"

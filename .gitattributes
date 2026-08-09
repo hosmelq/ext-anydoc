@@ -1,0 +1,9 @@
+* eol=lf text=auto
+
+.editorconfig export-ignore
+.gitattributes export-ignore
+.github export-ignore
+.gitignore export-ignore
+about.hbs export-ignore
+about.toml export-ignore
+tests export-ignore
