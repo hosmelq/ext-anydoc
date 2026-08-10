@@ -1,13 +1,24 @@
 {
     "name": "hosmelq/ext-anydoc",
-    "description": "Community-maintained PHP bindings for Firecrawl Anydoc.",
+    "description": "PHP extension for converting documents to GitHub-Flavored Markdown with Firecrawl Anydoc.",
     "license": "MIT",
     "type": "php-ext",
     "keywords": [
         "anydoc",
+        "converter",
+        "csv",
+        "document",
         "document-conversion",
-        "hosmelq",
-        "php-extension"
+        "epub",
+        "excel",
+        "markdown",
+        "open-document",
+        "pdf",
+        "php",
+        "php-extension",
+        "powerpoint",
+        "rtf",
+        "word"
     ],
     "authors": [
         {
