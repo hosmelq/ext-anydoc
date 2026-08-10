@@ -33,7 +33,11 @@
         "extension-name": "anydoc",
         "support-zts": true,
         "support-nts": true,
-        "build-path": "pie"
+        "build-path": "pie",
+        "download-url-method": [
+            "pre-packaged-binary",
+            "composer-default"
+        ]
     },
     "$schema": "https://getcomposer.org/schema.json"
 }

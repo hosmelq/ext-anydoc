@@ -13,8 +13,9 @@ Firecrawl.
 - PHP 8.4+ on Linux and macOS; PHP 8.4 or 8.5 on Windows, with NTS and ZTS
   supported.
 - PIE 1.4+.
-- Linux and macOS source builds require matching PHP development headers and
-  Rust 1.88+. Windows x64 uses released DLLs.
+- Released binaries cover Linux glibc on x64 and ARM64, macOS on Intel and
+  Apple Silicon, and Windows x64. Other Unix targets require matching PHP
+  development headers and Rust 1.88+ for the source-build fallback.
 
 ## Installation
 

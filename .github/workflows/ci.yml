@@ -62,17 +62,17 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             php: '8.4'
             ts: nts
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             php: '8.4'
             ts: zts
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             php: '8.5'
             ts: nts
             oracle: true
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             php: '8.5'
             ts: zts
           - os: macos-15-intel
@@ -109,6 +109,12 @@ jobs:
           php-version: ${{ matrix.php }}
         env:
           phpts: ${{ matrix.ts }}
+
+      - name: Select Clang 15
+        if: runner.os == 'Linux'
+        run: |
+          echo "CLANG_PATH=/usr/bin/clang-15" >> "$GITHUB_ENV"
+          echo "LIBCLANG_PATH=/usr/lib/llvm-15/lib" >> "$GITHUB_ENV"
 
       - name: Configure extension
         working-directory: pie
@@ -152,6 +158,21 @@ jobs:
         run: >-
           php -n -d extension="$PWD/pie/modules/anydoc.so"
           tests/parity/model.php _upstream /tmp/anydoc-model-oracle.json
+
+      - name: Package Unix binary
+        if: github.ref_type == 'tag'
+        id: package
+        env:
+          PACKAGE_VERSION: ${{ github.ref_name }}
+        run: bash .github/scripts/package-unix.sh "${PACKAGE_VERSION}"
+
+      - name: Upload Unix package
+        if: github.ref_type == 'tag'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          if-no-files-found: error
+          name: php-anydoc-${{ matrix.os }}-${{ matrix.php }}-${{ matrix.ts }}
+          path: ${{ steps.package.outputs.archive }}
 
   pie:
     name: PIE package build
