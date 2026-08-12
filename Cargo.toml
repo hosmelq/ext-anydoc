@@ -1,5 +1,5 @@
 [package]
-description = "Community-maintained PHP bindings for Firecrawl Anydoc"
+description = "Community-maintained PHP bindings for Firecrawl anydoc"
 edition = "2024"
 license = "MIT"
 name = "ext-anydoc"

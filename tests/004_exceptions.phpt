@@ -1,5 +1,5 @@
 --TEST--
-Anydoc exposes typed conversion failures
+anydoc exposes typed conversion failures
 --EXTENSIONS--
 anydoc
 --FILE--
@@ -32,4 +32,4 @@ malformed
 part:null
 detail:zip
 Anydoc\Exception\IoException:io
-Exception:unknown Anydoc format: unknown
+Exception:unknown anydoc format: unknown

@@ -12,7 +12,7 @@ $fixtures = $upstream.'/tests/fixtures';
 $snapshots = $upstream.'/tests/snapshots';
 
 if (! is_dir($fixtures) || ! is_dir($snapshots)) {
-    throw new RuntimeException('The supplied path is not an Anydoc source checkout.');
+    throw new RuntimeException('The supplied path is not an anydoc source checkout.');
 }
 
 $files = [];
@@ -137,7 +137,7 @@ if ($snapshotCount !== 58 || $abuseCount !== 8 || $detectionCount !== 48) {
 }
 
 echo sprintf(
-    "Anydoc parity passed: %d snapshots, %d abuse fixtures, %d detection fixtures.\n",
+    "anydoc parity passed: %d snapshots, %d abuse fixtures, %d detection fixtures.\n",
     $snapshotCount,
     $abuseCount,
     $detectionCount,

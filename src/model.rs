@@ -675,7 +675,7 @@ fn asset(value: core::Asset) -> PhpResult<Asset> {
 
 fn object(value: impl IntoZval) -> PhpResult<Zval> {
     value.into_zval(false).map_err(|error| {
-        PhpException::default(format!("failed to build Anydoc PHP model: {error}"))
+        PhpException::default(format!("failed to build anydoc PHP model: {error}"))
     })
 }
 
@@ -684,5 +684,5 @@ fn usize_to_php(value: usize, field: &str) -> PhpResult<i64> {
 }
 
 fn integer_overflow(field: &str) -> PhpException {
-    PhpException::default(format!("Anydoc {field} exceeds the PHP integer range"))
+    PhpException::default(format!("anydoc {field} exceeds the PHP integer range"))
 }

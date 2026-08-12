@@ -1,7 +1,7 @@
 # ext-anydoc
 
 Native PHP bindings for
-[Firecrawl Anydoc](https://github.com/firecrawl/anydoc). Convert Word,
+[Firecrawl anydoc](https://github.com/firecrawl/anydoc). Convert Word,
 PowerPoint, Excel, OpenDocument, RTF, EPUB, CSV, and PDF files to
 GitHub-Flavored Markdown.
 

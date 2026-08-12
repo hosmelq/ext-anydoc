@@ -175,6 +175,6 @@ where
 
 pub fn panic() -> PhpException {
     PhpException::from_class::<PanicException>(
-        "Anydoc panicked while processing the document".into(),
+        "anydoc panicked while processing the document".into(),
     )
 }

@@ -4,5 +4,11 @@
 .vscode
 composer.lock
 /dist
+/pie/*
+!/pie/Makefile.frag
+!/pie/config.m4
 /target
+/tests/*
+!/tests/*.phpt
+!/tests/parity/
 vendor

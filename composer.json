@@ -1,6 +1,6 @@
 {
     "name": "hosmelq/ext-anydoc",
-    "description": "PHP extension for converting documents to GitHub-Flavored Markdown with Firecrawl Anydoc.",
+    "description": "PHP extension for converting documents to GitHub-Flavored Markdown with Firecrawl anydoc.",
     "license": "MIT",
     "type": "php-ext",
     "keywords": [

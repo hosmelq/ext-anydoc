@@ -1,5 +1,5 @@
 --TEST--
-Anydoc converts CSV bytes to Markdown and the document model
+anydoc converts CSV bytes to Markdown and the document model
 --EXTENSIONS--
 anydoc
 --FILE--

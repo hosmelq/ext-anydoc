@@ -1,5 +1,5 @@
 PHP_ARG_ENABLE([anydoc], [whether to enable anydoc],
-  [AS_HELP_STRING([--enable-anydoc], [Enable the Anydoc extension (Rust via ext-php-rs)])],
+  [AS_HELP_STRING([--enable-anydoc], [Enable the anydoc extension (Rust via ext-php-rs)])],
   [no])
 
 if test "$PHP_ANYDOC" != "no"; then

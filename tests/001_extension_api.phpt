@@ -1,5 +1,5 @@
 --TEST--
-Anydoc exposes its public PHP API
+anydoc exposes its public PHP API
 --EXTENSIONS--
 anydoc
 --FILE--

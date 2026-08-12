@@ -88,7 +88,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Checkout Anydoc v0.1.7 fixtures
+      - name: Checkout anydoc fixtures
         if: matrix.oracle
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:

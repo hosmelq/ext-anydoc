@@ -1,5 +1,5 @@
 --TEST--
-Anydoc detects and normalizes document formats
+anydoc detects and normalizes document formats
 --EXTENSIONS--
 anydoc
 --FILE--

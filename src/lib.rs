@@ -26,7 +26,7 @@ fn format_name(format: anydoc::Format) -> &'static str {
 
 fn parse_format(format: &str) -> PhpResult<anydoc::Format> {
     anydoc::Format::from_extension(format.trim_start_matches('.'))
-        .ok_or_else(|| PhpException::default(format!("unknown Anydoc format: {format}")))
+        .ok_or_else(|| PhpException::default(format!("unknown anydoc format: {format}")))
 }
 
 fn guard<T>(operation: impl FnOnce() -> Result<T, anydoc::ConvertError>) -> PhpResult<T> {
@@ -74,7 +74,7 @@ pub fn anydoc_to_markdown_bytes(
     guard(|| anydoc::to_markdown_bytes(&bytes, format))
 }
 
-/// Parse in-memory document bytes into Anydoc's information-preserving model.
+/// Parse in-memory document bytes into anydoc's information-preserving model.
 #[php_function]
 #[php(defaults(format = None))]
 pub fn anydoc_to_document(
@@ -87,7 +87,7 @@ pub fn anydoc_to_document(
     model::convert(document)
 }
 
-/// Register the Anydoc PHP extension.
+/// Register the anydoc PHP extension.
 #[php_module]
 pub fn module(module: ModuleBuilder) -> ModuleBuilder {
     module

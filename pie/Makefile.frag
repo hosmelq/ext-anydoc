@@ -19,7 +19,7 @@ build-modules: rust-build
 
 rust-build:
 	@$(mkinstalldirs) "$(top_builddir)/modules"
-	@echo "Building the Anydoc Rust extension ($(RUST_PROFILE))"
+	@echo "Building the anydoc Rust extension ($(RUST_PROFILE))"
 	@cd "$(RUST_DIR)" && \
 		PHP="$(PHP_EXECUTABLE)" \
 		PHP_CONFIG="$(PHP_CONFIG)" \

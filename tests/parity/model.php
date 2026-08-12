@@ -68,7 +68,7 @@ foreach ($oracle as $relative => $expected) {
 
 $errors = count(array_filter($actual, static fn (array $result): bool => isset($result['error'])));
 echo sprintf(
-    "Anydoc model parity passed: %d fixtures (%d documents, %d errors).\n",
+    "anydoc model parity passed: %d fixtures (%d documents, %d errors).\n",
     count($actual),
     count($actual) - $errors,
     $errors,

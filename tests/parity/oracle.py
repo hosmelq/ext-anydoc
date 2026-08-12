@@ -1,4 +1,4 @@
-"""Serialize the official Anydoc Python binding model for PHP parity tests."""
+"""Serialize the official anydoc Python binding model for PHP parity tests."""
 
 from __future__ import annotations
 
