@@ -13,7 +13,7 @@ crate-type = ["cdylib"]
 name = "anydoc"
 
 [dependencies]
-anydoc = "=0.1.7"
+anydoc = "=0.1.8"
 ext-php-rs = "=0.15.15"
 
 [build-dependencies]
