@@ -1,21 +1,18 @@
 # ext-anydoc
 
-Native PHP bindings for
-[Firecrawl anydoc](https://github.com/firecrawl/anydoc). Convert Word,
-PowerPoint, Excel, OpenDocument, RTF, EPUB, CSV, and PDF files to
-GitHub-Flavored Markdown.
+Native PHP bindings for [Firecrawl anydoc](https://github.com/firecrawl/anydoc)
+to convert Word, PowerPoint, Excel, OpenDocument, RTF, EPUB, CSV, and PDF files
+to GitHub-Flavored Markdown.
+
+Starting with v0.2.0, extension releases match the anydoc version they embed.
 
 This community project is not affiliated with, endorsed by, or maintained by
 Firecrawl.
 
 ## Requirements
 
-- PHP 8.4+ on Linux and macOS; PHP 8.4 or 8.5 on Windows, with NTS and ZTS
-  supported.
+- PHP 8.4+.
 - PIE 1.4+.
-- Released binaries cover Linux glibc on x64 and ARM64, macOS on Intel and
-  Apple Silicon, and Windows x64. Other Unix targets require matching PHP
-  development headers and Rust 1.88+ for the source-build fallback.
 
 ## Installation
 
@@ -24,6 +21,11 @@ Install the extension with [PIE](https://php.github.io/pie/):
 ```bash
 pie install hosmelq/ext-anydoc
 ```
+
+Prebuilt binaries are available for PHP 8.4 and 8.5 on Linux glibc x64 and
+ARM64, macOS Intel and Apple Silicon, and Windows x64. Linux and Windows include
+NTS and ZTS builds; macOS includes NTS builds. Other Unix targets build from
+source and require matching PHP development headers and Rust 1.88+.
 
 ## Usage
 
