@@ -100,6 +100,7 @@ $detectedFormats = [
     'pptx' => 'pptx',
     'rtf' => 'rtf',
     'xls' => 'xlsx',
+    'xlsb' => 'xlsx',
     'xlsx' => 'xlsx',
 ];
 $detectionCount = 0;
@@ -127,7 +128,7 @@ foreach ($detectedFormats as $directory => $expectedFormat) {
     }
 }
 
-if ($snapshotCount !== 58 || $abuseCount !== 8 || $detectionCount !== 48) {
+if ($snapshotCount !== 59 || $abuseCount !== 8 || $detectionCount !== 49) {
     throw new RuntimeException(sprintf(
         'Unexpected corpus size: %d snapshots, %d abuse fixtures, %d detection fixtures',
         $snapshotCount,

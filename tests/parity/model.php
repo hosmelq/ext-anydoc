@@ -43,7 +43,7 @@ foreach ($iterator as $file) {
 }
 ksort($actual);
 
-if (count($actual) !== 66 || count($oracle) !== 66) {
+if (count($actual) !== 67 || count($oracle) !== 67) {
     throw new RuntimeException(sprintf(
         'Unexpected model corpus size: PHP %d, Python %d',
         count($actual),
