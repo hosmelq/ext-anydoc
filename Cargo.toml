@@ -6,7 +6,7 @@ name = "ext-anydoc"
 publish = false
 repository = "https://github.com/hosmelq/ext-anydoc"
 rust-version = "1.88"
-version = "0.2.0"
+version = "0.2.3"
 
 [lib]
 crate-type = ["cdylib"]
