@@ -128,7 +128,7 @@ foreach ($detectedFormats as $directory => $expectedFormat) {
     }
 }
 
-if ($snapshotCount !== 59 || $abuseCount !== 8 || $detectionCount !== 49) {
+if ($snapshotCount !== 64 || $abuseCount !== 8 || $detectionCount !== 54) {
     throw new RuntimeException(sprintf(
         'Unexpected corpus size: %d snapshots, %d abuse fixtures, %d detection fixtures',
         $snapshotCount,

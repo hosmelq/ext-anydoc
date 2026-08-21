@@ -43,7 +43,7 @@ foreach ($iterator as $file) {
 }
 ksort($actual);
 
-if (count($actual) !== 67 || count($oracle) !== 67) {
+if (count($actual) !== 72 || count($oracle) !== 72) {
     throw new RuntimeException(sprintf(
         'Unexpected model corpus size: PHP %d, Python %d',
         count($actual),
@@ -114,6 +114,7 @@ function canonicalBlock(Anydoc\Block $block): array
             'text' => $block->text,
         ],
         $block instanceof Anydoc\Rule => ['type' => 'rule'],
+        $block instanceof Anydoc\MathBlock => ['type' => 'math', 'text' => $block->text],
         default => throw new RuntimeException('Unknown PHP block class: '.$block::class),
     };
 }
@@ -139,6 +140,8 @@ function canonicalInline(Anydoc\Inline $inline): array
         $inline instanceof Anydoc\Anchor => ['type' => 'anchor', 'anchor' => $inline->anchor],
         $inline instanceof Anydoc\NoteReference => ['type' => 'note_ref', 'note_id' => $inline->noteId],
         $inline instanceof Anydoc\LineBreak => ['type' => 'line_break'],
+        $inline instanceof Anydoc\MathInline => ['type' => 'math', 'text' => $inline->text],
+        $inline instanceof Anydoc\Checkbox => ['type' => 'checkbox', 'checked' => $inline->checked],
         default => throw new RuntimeException('Unknown PHP inline class: '.$inline::class),
     };
 }
@@ -195,7 +198,6 @@ function canonicalListItem(Anydoc\ListItem $item): array
 {
     return [
         'blocks' => array_map(canonicalBlock(...), $item->blocks),
-        'checked' => $item->checked,
         'marker_label' => $item->markerLabel,
     ];
 }

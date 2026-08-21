@@ -152,6 +152,17 @@ pub struct CodeBlock {
 }
 
 #[php_class]
+#[php(name = "Anydoc\\MathBlock")]
+#[php(extends(Block))]
+#[php(readonly)]
+#[php(flags = ClassFlags::Final)]
+#[derive(Clone)]
+pub struct MathBlock {
+    #[php(prop)]
+    pub text: String,
+}
+
+#[php_class]
 #[php(name = "Anydoc\\Rule")]
 #[php(extends(Block))]
 #[php(readonly)]
@@ -258,6 +269,28 @@ pub struct NoteReference {
 #[php(flags = ClassFlags::Final)]
 #[derive(Clone)]
 pub struct LineBreak;
+
+#[php_class]
+#[php(name = "Anydoc\\MathInline")]
+#[php(extends(Inline))]
+#[php(readonly)]
+#[php(flags = ClassFlags::Final)]
+#[derive(Clone)]
+pub struct MathInline {
+    #[php(prop)]
+    pub text: String,
+}
+
+#[php_class]
+#[php(name = "Anydoc\\Checkbox")]
+#[php(extends(Inline))]
+#[php(readonly)]
+#[php(flags = ClassFlags::Final)]
+#[derive(Clone)]
+pub struct Checkbox {
+    #[php(prop)]
+    pub checked: bool,
+}
 
 #[php_class]
 #[php(name = "Anydoc\\Style")]
@@ -389,8 +422,6 @@ impl DocumentList {
 #[derive(Clone)]
 pub struct ListItem {
     blocks: Vec<core::Block>,
-    #[php(prop)]
-    pub checked: Option<bool>,
     #[php(prop, name = "markerLabel")]
     pub marker_label: Option<String>,
 }
@@ -559,6 +590,7 @@ fn block(value: core::Block) -> PhpResult<Zval> {
         core::Block::BlockQuote(blocks) => object(BlockQuote { blocks }),
         core::Block::CodeBlock { lang, text } => object(CodeBlock { lang, text }),
         core::Block::Rule => object(Rule),
+        core::Block::Math(text) => object(MathBlock { text }),
     }
 }
 
@@ -574,6 +606,8 @@ fn inline(value: core::Inline) -> PhpResult<Zval> {
         core::Inline::Anchor(anchor) => object(AnchorInline { anchor }),
         core::Inline::NoteRef(note_id) => object(NoteReference { note_id }),
         core::Inline::LineBreak => object(LineBreak),
+        core::Inline::Math(text) => object(MathInline { text }),
+        core::Inline::Checkbox(checked) => object(Checkbox { checked }),
     }
 }
 
@@ -614,7 +648,6 @@ fn document_list(value: core::List) -> PhpResult<DocumentList> {
 fn list_item(value: core::ListItem) -> PhpResult<ListItem> {
     Ok(ListItem {
         blocks: value.blocks,
-        checked: value.checked,
         marker_label: value.marker_label,
     })
 }

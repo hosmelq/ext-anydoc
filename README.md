@@ -68,9 +68,9 @@ The document model is unavailable for PDF; use `anydoc_to_markdown_bytes()`.
 - `anydoc_to_markdown(string $path): string`
 - `anydoc_to_markdown_bytes(string $bytes, ?string $format = null): string`
 
-`Anydoc\Document` exposes readonly `assets`, `blocks`, and `notes`. Embedded
-asset data is binary-safe. See [`stubs/anydoc.stub.php`](stubs/anydoc.stub.php)
-for the complete model API.
+`Anydoc\Document` exposes readonly `assets`, `blocks`, and `notes`, including
+checkbox and math nodes. Embedded asset data is binary-safe. See
+[`stubs/anydoc.stub.php`](stubs/anydoc.stub.php) for the complete model API.
 
 ## Errors
 

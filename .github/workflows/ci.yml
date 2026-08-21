@@ -94,7 +94,7 @@ jobs:
         with:
           path: _upstream
           persist-credentials: false
-          ref: v0.2.0
+          ref: v0.2.3
           repository: firecrawl/anydoc
 
       - name: Set up Rust

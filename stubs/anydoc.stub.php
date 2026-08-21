@@ -56,6 +56,11 @@ namespace Anydoc {
         public string $text;
     }
 
+    final readonly class MathBlock extends Block
+    {
+        public string $text;
+    }
+
     final readonly class Rule extends Block {}
 
     abstract readonly class Inline {}
@@ -93,6 +98,16 @@ namespace Anydoc {
     }
 
     final readonly class LineBreak extends Inline {}
+
+    final readonly class MathInline extends Inline
+    {
+        public string $text;
+    }
+
+    final readonly class Checkbox extends Inline
+    {
+        public bool $checked;
+    }
 
     final readonly class Style
     {
@@ -150,8 +165,6 @@ namespace Anydoc {
     {
         /** @var list<Block> */
         public array $blocks;
-
-        public ?bool $checked;
 
         public ?string $markerLabel;
     }

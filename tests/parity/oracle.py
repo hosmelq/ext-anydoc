@@ -50,6 +50,10 @@ def inline(value: anydoc.Inline) -> dict[str, Any]:
         return {"type": "note_ref", "note_id": value.note_id}
     if value.kind == "line_break":
         return {"type": "line_break"}
+    if value.kind == "math":
+        return {"type": "math", "text": value.text}
+    if value.kind == "checkbox":
+        return {"type": "checkbox", "checked": value.checked}
     raise ValueError(f"unknown inline kind: {value.kind}")
 
 
@@ -64,7 +68,6 @@ def document_list(value: anydoc.List) -> dict[str, Any]:
 def list_item(value: anydoc.ListItem) -> dict[str, Any]:
     return {
         "blocks": [block(item) for item in value.blocks],
-        "checked": value.checked,
         "marker_label": value.marker_label,
     }
 
@@ -117,6 +120,8 @@ def block(value: anydoc.Block) -> dict[str, Any]:
         return {"type": "code_block", "lang": value.lang, "text": value.text}
     if value.kind == "rule":
         return {"type": "rule"}
+    if value.kind == "math":
+        return {"type": "math", "text": value.text}
     raise ValueError(f"unknown block kind: {value.kind}")
 
 
