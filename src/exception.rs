@@ -26,38 +26,6 @@ unsafe extern "C" {
 pub struct ConvertException;
 
 #[php_class]
-#[php(name = "Anydoc\\Exception\\UnsupportedException")]
-#[php(extends(ConvertException))]
-#[php(flags = ClassFlags::Final)]
-#[derive(Default)]
-pub struct UnsupportedException {
-    #[php(prop)]
-    pub detail: String,
-}
-
-#[php_impl]
-impl UnsupportedException {
-    const ERROR_CODE: &'static str = "unsupported";
-}
-
-#[php_class]
-#[php(name = "Anydoc\\Exception\\MalformedException")]
-#[php(extends(ConvertException))]
-#[php(flags = ClassFlags::Final)]
-#[derive(Default)]
-pub struct MalformedException {
-    #[php(prop)]
-    pub part: Option<String>,
-    #[php(prop)]
-    pub detail: String,
-}
-
-#[php_impl]
-impl MalformedException {
-    const ERROR_CODE: &'static str = "malformed";
-}
-
-#[php_class]
 #[php(name = "Anydoc\\Exception\\EncryptedException")]
 #[php(extends(ConvertException))]
 #[php(flags = ClassFlags::Final)]
@@ -70,20 +38,32 @@ impl EncryptedException {
 }
 
 #[php_class]
-#[php(name = "Anydoc\\Exception\\ResourceLimitException")]
+#[php(name = "Anydoc\\Exception\\IoException")]
 #[php(extends(ConvertException))]
 #[php(flags = ClassFlags::Final)]
 #[derive(Default)]
-pub struct ResourceLimitException {
-    #[php(prop)]
-    pub limit: String,
+pub struct IoException;
+
+#[php_impl]
+impl IoException {
+    const ERROR_CODE: &'static str = "io";
+}
+
+#[php_class]
+#[php(name = "Anydoc\\Exception\\MalformedException")]
+#[php(extends(ConvertException))]
+#[php(flags = ClassFlags::Final)]
+#[derive(Default)]
+pub struct MalformedException {
     #[php(prop)]
     pub detail: String,
+    #[php(prop)]
+    pub part: Option<String>,
 }
 
 #[php_impl]
-impl ResourceLimitException {
-    const ERROR_CODE: &'static str = "resourceLimit";
+impl MalformedException {
+    const ERROR_CODE: &'static str = "malformed";
 }
 
 #[php_class]
@@ -102,15 +82,20 @@ impl MissingPartException {
 }
 
 #[php_class]
-#[php(name = "Anydoc\\Exception\\IoException")]
+#[php(name = "Anydoc\\Exception\\NeedsOcrException")]
 #[php(extends(ConvertException))]
 #[php(flags = ClassFlags::Final)]
 #[derive(Default)]
-pub struct IoException;
+pub struct NeedsOcrException {
+    #[php(prop, name = "pageCount")]
+    pub page_count: i64,
+    #[php(prop)]
+    pub pages: Vec<i64>,
+}
 
 #[php_impl]
-impl IoException {
-    const ERROR_CODE: &'static str = "io";
+impl NeedsOcrException {
+    const ERROR_CODE: &'static str = "needsOcr";
 }
 
 #[php_class]
@@ -120,28 +105,67 @@ impl IoException {
 #[derive(Default)]
 pub struct PanicException;
 
+#[php_class]
+#[php(name = "Anydoc\\Exception\\ResourceLimitException")]
+#[php(extends(ConvertException))]
+#[php(flags = ClassFlags::Final)]
+#[derive(Default)]
+pub struct ResourceLimitException {
+    #[php(prop)]
+    pub detail: String,
+    #[php(prop)]
+    pub limit: String,
+}
+
+#[php_impl]
+impl ResourceLimitException {
+    const ERROR_CODE: &'static str = "resourceLimit";
+}
+
+#[php_class]
+#[php(name = "Anydoc\\Exception\\UnsupportedException")]
+#[php(extends(ConvertException))]
+#[php(flags = ClassFlags::Final)]
+#[derive(Default)]
+pub struct UnsupportedException {
+    #[php(prop)]
+    pub detail: String,
+}
+
+#[php_impl]
+impl UnsupportedException {
+    const ERROR_CODE: &'static str = "unsupported";
+}
+
 pub fn convert(error: anydoc::ConvertError) -> PhpException {
     let message = error.to_string();
 
     match error {
-        anydoc::ConvertError::Unsupported(detail) => {
-            with_object(UnsupportedException { detail }, message)
-        }
-        anydoc::ConvertError::Malformed { part, detail } => {
-            with_object(MalformedException { part, detail }, message)
-        }
         anydoc::ConvertError::Encrypted => PhpException::from_class::<EncryptedException>(message),
-        anydoc::ConvertError::ResourceLimit { limit, detail } => with_object(
-            ResourceLimitException {
-                limit: limit.into(),
-                detail,
-            },
-            message,
-        ),
+        anydoc::ConvertError::Io(_) => PhpException::from_class::<IoException>(message),
+        anydoc::ConvertError::Malformed { part, detail } => {
+            with_object(MalformedException { detail, part }, message)
+        }
         anydoc::ConvertError::MissingPart { part } => {
             with_object(MissingPartException { part }, message)
         }
-        anydoc::ConvertError::Io(_) => PhpException::from_class::<IoException>(message),
+        anydoc::ConvertError::NeedsOcr { pages, page_count } => with_object(
+            NeedsOcrException {
+                page_count: i64::from(page_count),
+                pages: pages.into_iter().map(i64::from).collect(),
+            },
+            message,
+        ),
+        anydoc::ConvertError::ResourceLimit { limit, detail } => with_object(
+            ResourceLimitException {
+                detail,
+                limit: limit.into(),
+            },
+            message,
+        ),
+        anydoc::ConvertError::Unsupported(detail) => {
+            with_object(UnsupportedException { detail }, message)
+        }
         _ => PhpException::from_class::<ConvertException>(message),
     }
 }

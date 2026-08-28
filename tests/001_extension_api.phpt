@@ -28,6 +28,12 @@ echo is_subclass_of(
     Anydoc\Exception\MalformedException::class,
     Anydoc\Exception\ConvertException::class,
 ) ? "exceptions:typed\n" : "exceptions:untyped\n";
+$needsOcr = new ReflectionClass(Anydoc\Exception\NeedsOcrException::class);
+echo Anydoc\Exception\NeedsOcrException::ERROR_CODE === 'needsOcr'
+    && $needsOcr->hasProperty('pageCount')
+    && $needsOcr->hasProperty('pages')
+    ? "needs-ocr:detailed\n"
+    : "needs-ocr:incomplete\n";
 echo (new ReflectionClass(Anydoc\ListItem::class))->hasProperty('checked') ? "list-item:legacy\n" : "list-item:current\n";
 echo is_subclass_of(Anydoc\MathBlock::class, Anydoc\Block::class) ? "math-block:block\n" : "math-block:invalid\n";
 echo is_subclass_of(Anydoc\MathInline::class, Anydoc\Inline::class) ? "math-inline:inline\n" : "math-inline:invalid\n";
@@ -45,6 +51,7 @@ document:readonly
 block:abstract
 checkbox:inline
 exceptions:typed
+needs-ocr:detailed
 list-item:current
 math-block:block
 math-inline:inline

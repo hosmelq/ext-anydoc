@@ -228,11 +228,14 @@ namespace Anydoc {
 namespace Anydoc\Exception {
     class ConvertException extends \Exception {}
 
-    final class UnsupportedException extends ConvertException
+    final class EncryptedException extends ConvertException
     {
-        public const ERROR_CODE = 'unsupported';
+        public const ERROR_CODE = 'encrypted';
+    }
 
-        public string $detail;
+    final class IoException extends ConvertException
+    {
+        public const ERROR_CODE = 'io';
     }
 
     final class MalformedException extends ConvertException
@@ -244,10 +247,24 @@ namespace Anydoc\Exception {
         public ?string $part;
     }
 
-    final class EncryptedException extends ConvertException
+    final class MissingPartException extends ConvertException
     {
-        public const ERROR_CODE = 'encrypted';
+        public const ERROR_CODE = 'missingPart';
+
+        public string $part;
     }
+
+    final class NeedsOcrException extends ConvertException
+    {
+        public const ERROR_CODE = 'needsOcr';
+
+        public int $pageCount;
+
+        /** @var list<int> */
+        public array $pages;
+    }
+
+    final class PanicException extends \Exception {}
 
     final class ResourceLimitException extends ConvertException
     {
@@ -258,19 +275,12 @@ namespace Anydoc\Exception {
         public string $limit;
     }
 
-    final class MissingPartException extends ConvertException
+    final class UnsupportedException extends ConvertException
     {
-        public const ERROR_CODE = 'missingPart';
+        public const ERROR_CODE = 'unsupported';
 
-        public string $part;
+        public string $detail;
     }
-
-    final class IoException extends ConvertException
-    {
-        public const ERROR_CODE = 'io';
-    }
-
-    final class PanicException extends \Exception {}
 }
 
 namespace {

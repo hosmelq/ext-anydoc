@@ -76,9 +76,13 @@ checkbox and math nodes. Embedded asset data is binary-safe. See
 
 Catch `Anydoc\Exception\ConvertException` for conversion failures. Its concrete
 types are `EncryptedException`, `IoException`, `MalformedException`,
-`MissingPartException`, `ResourceLimitException`, and `UnsupportedException`.
-Each concrete conversion exception exposes `ERROR_CODE`; some also expose
-`detail`, `limit`, or `part`. Rust panics surface as `PanicException`.
+`MissingPartException`, `NeedsOcrException`, `ResourceLimitException`, and
+`UnsupportedException`. Each concrete conversion exception exposes
+`ERROR_CODE`; some also expose `detail`, `limit`, `pageCount`, `pages`, or
+`part`. Rust panics surface as `PanicException`.
+
+`NeedsOcrException::$pages` contains the 1-indexed PDF pages requiring OCR,
+while `$pageCount` contains the total number of pages.
 
 ## License
 

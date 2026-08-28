@@ -43,7 +43,7 @@ foreach ($iterator as $file) {
 }
 ksort($actual);
 
-if (count($actual) !== 72 || count($oracle) !== 72) {
+if (count($actual) !== 74 || count($oracle) !== 74) {
     throw new RuntimeException(sprintf(
         'Unexpected model corpus size: PHP %d, Python %d',
         count($actual),
@@ -259,12 +259,13 @@ function canonicalError(Anydoc\Exception\ConvertException $exception): array
 {
     $result = [
         'error' => match (true) {
-            $exception instanceof Anydoc\Exception\UnsupportedException => 'unsupported',
-            $exception instanceof Anydoc\Exception\MalformedException => 'malformed',
             $exception instanceof Anydoc\Exception\EncryptedException => 'encrypted',
-            $exception instanceof Anydoc\Exception\ResourceLimitException => 'resourceLimit',
-            $exception instanceof Anydoc\Exception\MissingPartException => 'missingPart',
             $exception instanceof Anydoc\Exception\IoException => 'io',
+            $exception instanceof Anydoc\Exception\MalformedException => 'malformed',
+            $exception instanceof Anydoc\Exception\MissingPartException => 'missingPart',
+            $exception instanceof Anydoc\Exception\NeedsOcrException => 'needsOcr',
+            $exception instanceof Anydoc\Exception\ResourceLimitException => 'resourceLimit',
+            $exception instanceof Anydoc\Exception\UnsupportedException => 'unsupported',
             default => throw new RuntimeException('Unknown PHP conversion exception: '.$exception::class),
         },
         'message' => $exception->getMessage(),
@@ -273,6 +274,10 @@ function canonicalError(Anydoc\Exception\ConvertException $exception): array
     if ($exception instanceof Anydoc\Exception\MalformedException
         || $exception instanceof Anydoc\Exception\MissingPartException) {
         $result['part'] = $exception->part;
+    }
+    if ($exception instanceof Anydoc\Exception\NeedsOcrException) {
+        $result['page_count'] = $exception->pageCount;
+        $result['pages'] = $exception->pages;
     }
     if ($exception instanceof Anydoc\Exception\ResourceLimitException) {
         $result['limit'] = $exception->limit;

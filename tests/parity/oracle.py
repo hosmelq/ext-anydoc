@@ -152,11 +152,12 @@ def document(value: anydoc.Document) -> dict[str, Any]:
 
 def error(value: BaseException) -> dict[str, Any]:
     codes = {
-        anydoc.UnsupportedError: "unsupported",
-        anydoc.MalformedError: "malformed",
         anydoc.EncryptedError: "encrypted",
-        anydoc.ResourceLimitError: "resourceLimit",
+        anydoc.MalformedError: "malformed",
         anydoc.MissingPartError: "missingPart",
+        anydoc.NeedsOcrError: "needsOcr",
+        anydoc.ResourceLimitError: "resourceLimit",
+        anydoc.UnsupportedError: "unsupported",
     }
     result: dict[str, Any] = {
         "error": next(code for error_type, code in codes.items() if isinstance(value, error_type)),
@@ -164,6 +165,9 @@ def error(value: BaseException) -> dict[str, Any]:
     }
     if isinstance(value, (anydoc.MalformedError, anydoc.MissingPartError)):
         result["part"] = value.part
+    if isinstance(value, anydoc.NeedsOcrError):
+        result["page_count"] = value.page_count
+        result["pages"] = value.pages
     if isinstance(value, anydoc.ResourceLimitError):
         result["limit"] = value.limit
     return result

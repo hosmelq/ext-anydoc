@@ -30,6 +30,11 @@ sort($files);
 
 $snapshotCount = 0;
 $abuseCount = 0;
+$needsOcr = [
+    'pdf/handmade-mixed.pdf' => ['pageCount' => 2, 'pages' => [2]],
+    'pdf/handmade-scanned.pdf' => ['pageCount' => 2, 'pages' => [1, 2]],
+];
+$needsOcrCount = 0;
 
 foreach ($files as $path) {
     $relative = str_replace(DIRECTORY_SEPARATOR, '/', substr($path, strlen($fixtures) + 1));
@@ -67,6 +72,19 @@ foreach ($files as $path) {
     try {
         $actual = anydoc_to_markdown($path);
     } catch (Anydoc\Exception\ConvertException $exception) {
+        if (isset($needsOcr[$relative])) {
+            if (! $exception instanceof Anydoc\Exception\NeedsOcrException) {
+                throw new RuntimeException("$relative: expected a needs-OCR failure");
+            }
+
+            if ($exception->pageCount !== $needsOcr[$relative]['pageCount']
+                || $exception->pages !== $needsOcr[$relative]['pages']) {
+                throw new RuntimeException("$relative: incorrect needs-OCR details");
+            }
+
+            $needsOcrCount++;
+        }
+
         $actual = 'ERROR: '.$exception->getMessage();
     } catch (Throwable $throwable) {
         throw new RuntimeException(
@@ -128,18 +146,21 @@ foreach ($detectedFormats as $directory => $expectedFormat) {
     }
 }
 
-if ($snapshotCount !== 64 || $abuseCount !== 8 || $detectionCount !== 54) {
+if ($snapshotCount !== 66 || $abuseCount !== 8 || $detectionCount !== 56
+    || $needsOcrCount !== count($needsOcr)) {
     throw new RuntimeException(sprintf(
-        'Unexpected corpus size: %d snapshots, %d abuse fixtures, %d detection fixtures',
+        'Unexpected corpus size: %d snapshots, %d abuse fixtures, %d detection fixtures, %d needs-OCR fixtures',
         $snapshotCount,
         $abuseCount,
         $detectionCount,
+        $needsOcrCount,
     ));
 }
 
 echo sprintf(
-    "anydoc parity passed: %d snapshots, %d abuse fixtures, %d detection fixtures.\n",
+    "anydoc parity passed: %d snapshots, %d abuse fixtures, %d detection fixtures, %d needs-OCR fixtures.\n",
     $snapshotCount,
     $abuseCount,
     $detectionCount,
+    $needsOcrCount,
 );
