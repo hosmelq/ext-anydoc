@@ -26,6 +26,10 @@
             "email": "hosmelq@gmail.com"
         }
     ],
+    "homepage": "https://github.com/hosmelq/ext-anydoc",
+    "support": {
+        "docs": "https://github.com/hosmelq/ext-anydoc#readme"
+    },
     "require": {
         "php": "^8.4"
     },
