@@ -5,7 +5,7 @@ license = "MIT"
 name = "ext-anydoc"
 publish = false
 repository = "https://github.com/hosmelq/ext-anydoc"
-rust-version = "1.88"
+rust-version = "1.95"
 version = "0.2.4"
 
 [lib]
@@ -14,11 +14,11 @@ name = "anydoc"
 
 [dependencies]
 anydoc = "=0.2.4"
-ext-php-rs = "=0.15.15"
+ext-php-rs = "=0.16.5"
 
 [build-dependencies]
 anyhow = "=1.0.104"
-ext-php-rs-build = "=0.1.1"
+ext-php-rs-build = "=0.2.1"
 
 [profile.release]
 lto = "thin"

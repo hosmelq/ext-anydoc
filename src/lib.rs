@@ -26,7 +26,7 @@ fn format_name(format: anydoc::Format) -> &'static str {
 
 fn parse_format(format: &str) -> PhpResult<anydoc::Format> {
     anydoc::Format::from_extension(format.trim_start_matches('.'))
-        .ok_or_else(|| PhpException::default(format!("unknown anydoc format: {format}")))
+        .ok_or_else(|| PhpException::from_message(format!("unknown anydoc format: {format}")))
 }
 
 fn guard<T>(operation: impl FnOnce() -> Result<T, anydoc::ConvertError>) -> PhpResult<T> {
