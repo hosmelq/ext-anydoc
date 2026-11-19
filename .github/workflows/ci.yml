@@ -26,7 +26,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
+        uses: dtolnay/rust-toolchain@df2a88e9fe4098bad09cb42c3dec7187f15861fc # master
         with:
           components: clippy, rustfmt
           toolchain: 1.95.0
@@ -37,6 +37,11 @@ jobs:
           coverage: none
           php-version: '8.4'
           tools: composer
+
+      - name: Select Clang 21
+        run: |
+          echo "CLANG_PATH=/usr/bin/clang-21" >> "$GITHUB_ENV"
+          echo "LIBCLANG_PATH=/usr/lib/llvm-21/lib" >> "$GITHUB_ENV"
 
       - name: Check Rust formatting
         run: cargo fmt --check
@@ -107,7 +112,7 @@ jobs:
           repository: firecrawl/anydoc
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
+        uses: dtolnay/rust-toolchain@df2a88e9fe4098bad09cb42c3dec7187f15861fc # master
         with:
           toolchain: 1.95.0
 
@@ -195,7 +200,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
+        uses: dtolnay/rust-toolchain@df2a88e9fe4098bad09cb42c3dec7187f15861fc # master
         with:
           toolchain: 1.95.0
 
@@ -205,6 +210,11 @@ jobs:
           coverage: none
           php-version: '8.5'
           tools: pie:1.4.9
+
+      - name: Select Clang 21
+        run: |
+          echo "CLANG_PATH=/usr/bin/clang-21" >> "$GITHUB_ENV"
+          echo "LIBCLANG_PATH=/usr/lib/llvm-21/lib" >> "$GITHUB_ENV"
 
       - name: Register local package
         run: >-
@@ -253,7 +263,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
+        uses: dtolnay/rust-toolchain@df2a88e9fe4098bad09cb42c3dec7187f15861fc # master
         with:
           toolchain: nightly
 
